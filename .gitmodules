@@ -4,3 +4,6 @@
 [submodule "tecobrary-noti-slackbot"]
 	path = tecobrary-noti-slackbot
 	url = https://github.com/milzipmoza-developers/tecobrary-noti-slackbot.git
+[submodule "tecobrary-elk"]
+	path = tecobrary-elk
+	url = https://github.com/milzipmoza-developers/tecobrary-elk.git
