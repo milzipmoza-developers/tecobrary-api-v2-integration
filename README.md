@@ -25,6 +25,28 @@
 <br>
 
 ## 사용 방법
+
+<br>
+
+### 실행 관련 명령어
+
+1. docker-compose 파일을 실행하는 명령어
+```shell script
+$ ELK_VERSION="7.5.0" docker-compose up -d
+```
+- ELK_VERSION : ELK 버전을 arg 로 입력해줘야 합니다.
+
+<br>
+
+2. docker-compose 실행을 종료하는 명령어
+```shell script
+$ docker-compose down
+```
+
+<br>
+
+### 서브모듈 관련 명령어
+
 1. 처음 레포지토리를 clone 했을 때 서브 모듈 안이 비어 있는 경우
 
 ```shell script
