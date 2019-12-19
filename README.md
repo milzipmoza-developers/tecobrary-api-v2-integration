@@ -37,3 +37,9 @@ $ git submodule update --init --recursive
 ```shell script
 $ git submodule add [레포지토리 URL]
 ```
+<br>
+3. 서브 모듈을 업데이트 하고 싶은 경우
+
+```shell script
+$ git submodule update --remote
+```
