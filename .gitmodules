@@ -1,6 +1,7 @@
 [submodule "tecobrary-server-api-v2"]
 	path = tecobrary-server-api-v2
 	url = https://github.com/milzipmoza-developers/tecobrary-server-api-v2.git
+	branch = develop
 [submodule "tecobrary-noti-slackbot"]
 	path = tecobrary-noti-slackbot
 	url = https://github.com/milzipmoza-developers/tecobrary-noti-slackbot.git
