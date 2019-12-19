@@ -1,0 +1,97 @@
+version: "3.2"
+services:
+  api-server:
+    image: tecobrary/tecobrary-api-server
+    container_name: api-server
+    build:
+      context: ./tecobrary-server-api-v2/
+      args:
+        JAR_FILE: build/libs/*.jar
+    restart: always
+    depends_on:
+      - "mysql-db"
+    networks:
+      - tecobrary-springboot
+    ports:
+      - 9090:9090
+
+  mysql-db:
+    image: mysql:5.7
+    container_name: mysql-db
+    ports:
+      - 6033:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: tecobrary
+      MYSQL_PASSWORD: tecobrary
+      MYSQL_DATABASE: tecobrary
+    volumes:
+      - ./tecobrary-server-api-v2/docker/db/mysql/init:/docker-entrypoint-initdb.d
+      - ./tecobrary-server-api-v2/docker/cnf/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - tecobrary-db-migration
+      - tecobrary-springboot
+
+  tecobrary-es:
+    container_name: tecobrary-es
+    build:
+      context: ./tecobrary-elk/elasticsearch/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    volumes:
+      - type: volume
+        source: elasticsearch
+        target: /usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    depends_on:
+      - mysql-db
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    stdin_open: true
+    tty: true
+    networks:
+      - tecobrary-elk-network
+      - tecobrary-springboot
+
+  tecobrary-kibana:
+    container_name: tecobrary-kibana
+    build:
+      context: ./tecobrary-elk/kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    ports:
+      - "5601:5601"
+    depends_on:
+      - tecobrary-es
+    networks:
+      - tecobrary-elk-network
+
+  tecobrary-logstash:
+    container_name: tecobrary-logstash
+    build:
+      context: ./tecobrary-elk/logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    ports:
+      - "9600:9600"
+      - "5000:5000"
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+    depends_on:
+      - tecobrary-es
+    networks:
+      - tecobrary-elk-network
+      - tecobrary-db-migration
+
+networks:
+  tecobrary-elk-network:
+    driver: bridge
+  tecobrary-springboot:
+    driver: bridge
+  tecobrary-db-migration:
+    driver: bridge
+
+volumes:
+  elasticsearch:
